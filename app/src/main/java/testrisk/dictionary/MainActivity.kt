@@ -1,8 +1,6 @@
 package testrisk.dictionary
 
-import DBHelper
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -13,26 +11,20 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.Html
-import android.text.Spanned
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.util.Log
-import android.view.View
 import android.view.View.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
-import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.ResponseBody
 import org.json.JSONArray
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -48,7 +40,6 @@ class MainActivity : AppCompatActivity() {
 
     private var NETWORK_ERROR = "Bağlantı hatası! Lütfen internet ayarlarını kontrol ediniz."
     private var TERM_NOT_FOUND = "Aranan terim bulunamadı! Farklı bir terim arayınız."
-
 
     @RequiresApi(Build.VERSION_CODES.N)
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -80,16 +71,18 @@ class MainActivity : AppCompatActivity() {
 
                     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                         val searchText = etSearch.text.toString()
-                        if(searchText.length != 1) showSearchResult(searchText)
+                        if (searchText.length != 1) showSearchResult(searchText)
                     }
                 })
 
-                recyclerView.setOnTouchListener(OnTouchListener { v, event ->
-                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                recyclerView.setOnTouchListener(
+                    OnTouchListener { v, event ->
+                        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.hideSoftInputFromWindow(v.windowToken, 0)
 
-                    false
-                })
+                        false
+                    }
+                )
 
                 return@OnNavigationItemSelectedListener true
             }
@@ -113,11 +106,10 @@ class MainActivity : AppCompatActivity() {
         loadingPanel.visibility = VISIBLE
     }
 
-
-    //you need to keep the handler outside the runnable body to work in kotlin
+    // you need to keep the handler outside the runnable body to work in kotlin
     private fun runDelayedHandler(timeToWait: Long) {
 
-        //Keep it running
+        // Keep it running
         val handler = Handler()
         handler.postDelayed(runnable, timeToWait)
     }
@@ -131,7 +123,7 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.v("oncreate called", "oncreate")
-        //setLatestCommit()
+        // setLatestCommit()
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
@@ -166,14 +158,13 @@ class MainActivity : AppCompatActivity() {
 
         loadingPanel.visibility = GONE
 
-        if(terms.isEmpty()) {
+        if (terms.isEmpty()) {
             var newTerms = mutableListOf<Term>()
             newTerms.add(Term("404-not-found", TERM_NOT_FOUND))
             recyclerView.adapter = TermsAdapter(newTerms)
         } else {
             recyclerView.adapter = TermsAdapter(terms)
         }
-
     }
 
     private fun showAbout(text: String) {
@@ -183,13 +174,13 @@ class MainActivity : AppCompatActivity() {
         textAbout.text = removeNewLines(text)
     }
 
-    private fun fetchReadMe(){
+    private fun fetchReadMe() {
         val shaDB = dbHelper?.getSha("readme")
 
         if (shaReadme != shaDB) {
             addOrUpdateSha("readme", shaReadme, shaDB)
 
-            TermsApi().getReadMe().enqueue(object: Callback<ResponseBody> {
+            TermsApi().getReadMe().enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Toast.makeText(applicationContext, NETWORK_ERROR, Toast.LENGTH_LONG).show()
                 }
@@ -212,7 +203,7 @@ class MainActivity : AppCompatActivity() {
     private fun fetchTerms() {
         val shaDB = dbHelper?.getSha("terms")
 
-        if (shaTerms != shaDB ) {
+        if (shaTerms != shaDB) {
             // if the DB doesn't have latest commit update the sha and terms
             addOrUpdateSha("terms", shaTerms, shaDB)
 
@@ -232,7 +223,6 @@ class MainActivity : AppCompatActivity() {
                         addTermDB(it)
                     }
                 }
-
             })
         } else {
             Log.v("Terms: $shaTerms == $shaDB", "DB")
@@ -241,14 +231,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun fetchAbout() {
         val shaDB = dbHelper?.getSha("license")
 
         if (shaLicense != shaDB) {
             addOrUpdateSha("license", shaLicense, shaDB)
 
-            TermsApi().getLicense().enqueue(object: Callback<ResponseBody> {
+            TermsApi().getLicense().enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Toast.makeText(applicationContext, NETWORK_ERROR, Toast.LENGTH_LONG).show()
                 }
@@ -271,7 +260,7 @@ class MainActivity : AppCompatActivity() {
     fun setLatestCommit() {
         Thread.sleep(1000)
         Log.v("setLatestCommit called", "setLatestCommit")
-        TermsApi().getLatestCommit().enqueue(object: Callback<ResponseBody>{
+        TermsApi().getLatestCommit().enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 shaReadme = "notGetItFromGithub"
                 shaTerms = "notGetItFromGithub"
@@ -283,11 +272,11 @@ class MainActivity : AppCompatActivity() {
                 val body = JSONArray(response.body()?.string())
                 var shas = arrayListOf("README.md", "LICENSE", "terms.json")
 
-                for (i in 0 until body.length()-1) {
+                for (i in 0 until body.length() - 1) {
                     var item = body.getJSONObject(i)
                     var name = item.getString("name")
-                    if(shas.contains(name)) {
-                        when(name) {
+                    if (shas.contains(name)) {
+                        when (name) {
                             "README.md" -> {
                                 shaReadme = item.getString("sha")
                                 shas.remove("README.md")
@@ -301,9 +290,8 @@ class MainActivity : AppCompatActivity() {
                                 shas.remove("Terms.json")
                             }
                         }
-
                     }
-                    if(shas.size == 0) break
+                    if (shas.size == 0) break
                 }
             }
         })
@@ -340,4 +328,3 @@ class MainActivity : AppCompatActivity() {
         showTerms(terms)
     }
 }
-

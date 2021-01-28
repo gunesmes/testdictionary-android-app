@@ -1,12 +1,11 @@
+package testrisk.dictionary
+
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import testrisk.dictionary.Term
 import java.lang.Exception
-
 
 class DBHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
@@ -39,21 +38,21 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_V
     fun deleteRecords(tableName: String) {
         val db = this.writableDatabase
 
-        //Delete all records of table
+        // Delete all records of table
         db.execSQL("DELETE FROM $tableName")
 
         // Reset the auto_increment primary key if you needed
         // No need this since the $ID Integer PRIMARY KEY remove for the sake of CPU
         // db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE name=$tableName")
 
-        //For go back free space by shrinking sqlite file
+        // For go back free space by shrinking sqlite file
         db.execSQL("VACUUM")
         db.close()
     }
 
-    //Inserting (Creating) data
+    // Inserting (Creating) data
     fun addTerm(term: Term): Boolean {
-        //Create and/or open a database that will be used for reading and writing.
+        // Create and/or open a database that will be used for reading and writing.
         val db = this.writableDatabase
         val values = ContentValues()
         values.put("term", term.term)
@@ -64,7 +63,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_V
         return (Integer.parseInt("$_success") != -1)
     }
 
-    //Inserting (Content) data
+    // Inserting (Content) data
     fun addPageContent(page: String, content: String): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()

@@ -12,10 +12,9 @@ fun Context.hideKeyboard(view: View) {
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-
 fun parseTextLink(text: String): String {
     val pattern = """[^!]\[(.*?)\]\((.*?)\)""".toRegex()
-    var newText : String = text
+    var newText: String = text
 
     val matches = pattern.findAll(text)
 
@@ -33,7 +32,7 @@ fun parseTextLink(text: String): String {
 
 fun removeImage(text: String): String {
     val pattern = """!\[(.*?)\]\((.*?)\)<br><br>""".toRegex()
-    var newText : String = text
+    var newText: String = text
 
     val matches = pattern.findAll(text)
 
@@ -49,8 +48,8 @@ fun removeImage(text: String): String {
 }
 
 fun boldTitle(text: String): String {
-    val pattern = """### (.*?)<br>""".toRegex()
-    var newText : String = text
+    val pattern = """#### (.*?)<br>""".toRegex()
+    var newText: String = text
 
     val matches = pattern.findAll(text)
 
@@ -58,7 +57,7 @@ fun boldTitle(text: String): String {
         var itemText = it.groups[1]?.value.toString()
 
         newText = newText
-            .replace("### $itemText", "<b>$itemText</b>")
+            .replace("#### $itemText", "<b>$itemText</b>")
     }
 
     return newText
@@ -66,7 +65,7 @@ fun boldTitle(text: String): String {
 
 fun removeNewLines(text: String): String {
     val pattern = """(\w+)\n(\w+)""".toRegex()
-    var newText : String = text
+    var newText: String = text
 
     val matches = pattern.findAll(text)
 

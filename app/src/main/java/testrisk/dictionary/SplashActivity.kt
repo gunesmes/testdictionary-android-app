@@ -4,8 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.ResponseBody
@@ -14,7 +12,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SplashActivity: AppCompatActivity() {
+class SplashActivity : AppCompatActivity() {
     private var shaTerms = String()
     private var shaLicense = String()
     private var shaReadme = String()
@@ -30,11 +28,10 @@ class SplashActivity: AppCompatActivity() {
         setLatestCommit(intent)
     }
 
-
     private fun setLatestCommit(intent: Intent) {
         Thread.sleep(1000)
         Log.v("setLatestCommit called", "setLatestCommit")
-        TermsApi().getLatestCommit().enqueue(object: Callback<ResponseBody>{
+        TermsApi().getLatestCommit().enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 shaReadme = "notGetItFromGithub"
                 shaTerms = "notGetItFromGithub"
@@ -46,11 +43,11 @@ class SplashActivity: AppCompatActivity() {
                 val body = JSONArray(response.body()?.string())
                 var shas = arrayListOf("README.md", "LICENSE", "terms.json")
 
-                for (i in 0 until body.length()-1) {
+                for (i in 0 until body.length() - 1) {
                     var item = body.getJSONObject(i)
                     var name = item.getString("name")
-                    if(shas.contains(name)) {
-                        when(name) {
+                    if (shas.contains(name)) {
+                        when (name) {
                             "README.md" -> {
                                 shaReadme = item.getString("sha")
                                 shas.remove("README.md")
@@ -64,9 +61,8 @@ class SplashActivity: AppCompatActivity() {
                                 shas.remove("Terms.json")
                             }
                         }
-
                     }
-                    if(shas.size == 0) break
+                    if (shas.size == 0) break
                 }
 
                 intent.putExtra("shaTerms", shaTerms)
@@ -82,7 +78,7 @@ class SplashActivity: AppCompatActivity() {
     private fun setLatestCommitSnyc() {
         Log.v("setLatestCommit called", "setLatestCommit")
         var response = TermsApi().getLatestCommit().execute()
-        if(response.isSuccessful) {
+        if (response.isSuccessful) {
             val body = JSONArray(response.body()?.string())
             var shas = arrayListOf("README.md", "LICENSE", "terms.json")
 
@@ -104,7 +100,6 @@ class SplashActivity: AppCompatActivity() {
                             shas.remove("Terms.json")
                         }
                     }
-
                 }
                 if (shas.size == 0) break
             }
@@ -115,6 +110,4 @@ class SplashActivity: AppCompatActivity() {
             Toast.makeText(applicationContext, NETWORK_ERROR, Toast.LENGTH_LONG).show()
         }
     }
-
-
 }

@@ -13,10 +13,10 @@ const val BRANCH = "master"
 interface TermsApi {
 
     @GET("/gunesmes/testsozluk/$BRANCH/terms.json")
-    fun getTerms() : Call<List<Term>>
+    fun getTerms(): Call<List<Term>>
 
     companion object {
-        operator fun invoke() : TermsApi{
+        operator fun invoke(): TermsApi {
             return Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
