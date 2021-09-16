@@ -5,10 +5,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.StrictMode
-import android.support.annotation.RequiresApi
-import android.support.design.widget.BottomNavigationView
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.annotation.RequiresApi
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
@@ -18,6 +17,7 @@ import android.view.View.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -117,12 +117,12 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onStart() {
         super.onStart()
-        Log.v("onStart called", "onstart")
+        Log.v("onStart called", "onStart")
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.v("oncreate called", "oncreate")
+        Log.v("onCreate called", "onCreate")
         // setLatestCommit()
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()

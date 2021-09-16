@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Yazılım Test Sözlüğü</string>
     <string name="title">Neden Sözlük</string>
-    <string name="title_home">Anasayfa</string>
+    <string name="title_home">HomeScreen</string>
     <string name="title_dictionary">Sözlük</string>
     <string name="title_about">License</string>
     <string name="search_hint">Sözlükte ara . . .</string>

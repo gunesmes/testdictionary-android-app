@@ -2,7 +2,7 @@ package testrisk.dictionary
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,7 +18,6 @@ class SplashActivity : AppCompatActivity() {
     private var shaReadme = String()
 
     private var NETWORK_ERROR = "Bağlantı hatası! Lütfen internet ayarlarını kontrol ediniz."
-    private var TERM_NOT_FOUND = "Aranan terim bulunamadı! Farklı bir terim arayınız."
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
